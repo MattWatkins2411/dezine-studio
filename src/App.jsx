@@ -54,9 +54,9 @@ const firebaseConfig = {
 
 // Fallback logic for the preview environment
 const getFirebaseConfig = () => {
-  if (Object.keys(userFirebaseConfig).length > 0) return userFirebaseConfig;
+  if (typeof userFirebaseConfig !== 'undefined' && Object.keys(userFirebaseConfig).length > 0) return userFirebaseConfig;
   if (typeof __firebase_config !== 'undefined') return JSON.parse(__firebase_config);
-  return {}; 
+  return firebaseConfig; 
 };
 
 const app = initializeApp(getFirebaseConfig());
