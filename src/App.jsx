@@ -54,8 +54,8 @@ const firebaseConfig = {
 
 // Fallback logic for the preview environment
 const getFirebaseConfig = () => {
-  if (typeof userFirebaseConfig !== 'undefined' && Object.keys(userFirebaseConfig).length > 0) return userFirebaseConfig;
-  if (typeof __firebase_config !== 'undefined') return JSON.parse(__firebase_config);
+  if (typeof window !== 'undefined' && window.userFirebaseConfig && Object.keys(window.userFirebaseConfig).length > 0) return window.userFirebaseConfig;
+  if (typeof window !== 'undefined' && window.__firebase_config) return JSON.parse(window.__firebase_config);
   return firebaseConfig; 
 };
 
