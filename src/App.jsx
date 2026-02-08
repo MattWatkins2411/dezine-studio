@@ -1,11 +1,15 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { 
-  Upload, Layers, Wand2, Move, Trash2, Download, Image as ImageIcon, Plus, 
+  Upload, Layers, Wand2, Move, Image as ImageIcon, Plus, 
   MousePointer2, LayoutTemplate, Maximize2, Undo2, Loader2, X, Save, Palette, 
   Search, Filter, Info, FileText, RotateCw, FlipHorizontal, Pencil, Check, 
   ArrowLeftCircle, AlertTriangle, FolderPlus, FolderInput, Sparkles, Bookmark,
   User, Users, LogOut, Cloud, CloudOff, Lightbulb, MessageSquare, LogIn, Mail, Lock,
-  Menu, Smartphone
+  Menu, Smartphone,
+  Download, 
+  Trash2, 
+  ChevronLeft, 
+  ChevronRight
 } from 'lucide-react';
 import { initializeApp } from 'firebase/app';
 import { 
@@ -741,7 +745,12 @@ const DezineApp = () => {
       {/* MOBILE HEADER (Visible on small screens) */}
       <div className="lg:hidden absolute top-0 left-0 right-0 h-14 bg-slate-950/90 backdrop-blur z-40 border-b border-slate-800 flex items-center justify-between px-4">
           <div className="flex items-center gap-2">
-             <button onClick={() => setSidebarOpen(!sidebarOpen)} className="p-2 text-white"><Menu /></button>
+             <button 
+                onClick={() => setSidebarOpen(!sidebarOpen)} /* Fixed state setter name */
+                className="p-2 hover:bg-slate-800 rounded-lg transition-colors"
+             >
+                {sidebarOpen ? <ChevronLeft size={24} /> : <ChevronRight size={24} />}
+             </button>
              <h1 className={`text-xl font-bold ${DEZINE_TEXT_GRADIENT}`}>Dezine</h1>
           </div>
           {installPrompt && (
@@ -749,7 +758,7 @@ const DezineApp = () => {
                   <Smartphone size={12} /> Install
               </button>
           )}
-      </div>
+       </div>
 
       {/* MOBILE SIDEBAR OVERLAY */}
       {sidebarOpen && (
@@ -757,12 +766,17 @@ const DezineApp = () => {
       )}
 
       {/* SIDEBAR */}
-      <div className={`fixed inset-y-0 left-0 w-80 bg-slate-950 border-r border-slate-800 flex flex-col z-50 shadow-xl transition-transform duration-300 transform lg:translate-x-0 lg:static ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
-        <div className="p-5 border-b border-slate-800 bg-slate-950 flex flex-col items-center gap-3 shrink-0">
+      <div className={`fixed inset-y-0 left-0 w-80 bg-slate-950 border-r border-slate-800 flex flex-col z-50 shadow-xl transition-transform duration-300 transform ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0 lg:hidden'}`}>
+        <div className="p-5 border-b border-slate-800 bg-slate-950 flex flex-col items-center gap-3 shrink-0 relative">
+          <button onClick={() => setSidebarOpen(false)} className="lg:hidden absolute top-4 right-4 text-slate-500 hover:text-white"><X /></button>
           {!logoError ? <img src={LOGO_URL} alt="Dezine" className="h-16 w-auto object-contain rounded-lg shadow-lg shadow-purple-900/20" onError={() => setLogoError(true)} /> : <h1 className={`text-3xl font-bold tracking-tight ${DEZINE_TEXT_GRADIENT}`}>Dezine</h1>}
+          
           <div className="w-full flex justify-between items-center mt-2 px-1">
              <p className="text-[10px] text-slate-500 font-medium uppercase tracking-widest">{dataMode === 'team' ? `TEAM: ${teamId}` : 'PERSONAL'}</p>
-             <button onClick={() => setProfileModalOpen(true)} className="p-1.5 hover:bg-slate-800 rounded-full text-slate-400 hover:text-white transition-colors"><User size={14} /></button>
+             <div className="flex gap-1">
+                <button onClick={() => setProfileModalOpen(true)} className="p-1.5 hover:bg-slate-800 rounded-full text-slate-400 hover:text-white transition-colors"><User size={14} /></button>
+                <button onClick={() => setSidebarOpen(false)} className="hidden lg:block p-1.5 hover:bg-slate-800 rounded-full text-slate-400 hover:text-white transition-colors"><ChevronLeft size={14} /></button>
+             </div>
           </div>
           {/* Desktop Install Prompt */}
           <div className="hidden lg:block w-full">
@@ -859,11 +873,16 @@ const DezineApp = () => {
 
       {/* CENTER WORKSPACE */}
       <div className="flex-1 flex flex-col bg-slate-900 relative">
-        <div className="h-16 border-b border-slate-800 flex items-center justify-between px-6 shrink-0 bg-slate-950/50 backdrop-blur-md z-10 lg:pl-6 pl-14">
-           <div className="flex gap-2 p-1 bg-slate-900/80 rounded-lg border border-slate-800/50">
-              <button onClick={() => setActiveTab('compose')} className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all ${activeTab === 'compose' ? `${DEZINE_GRADIENT} text-white shadow-lg` : 'text-slate-400 hover:text-white'}`}>Studio</button>
-              <button onClick={() => setActiveTab('results')} className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all ${activeTab === 'results' ? `${DEZINE_GRADIENT} text-white shadow-lg` : 'text-slate-400 hover:text-white'}`}>Gallery</button>
-           </div>
+         <div className="h-16 border-b border-slate-800 flex items-center justify-between px-6 shrink-0 bg-slate-950/50 backdrop-blur-md z-10 lg:pl-6 pl-4">
+            <div className="flex items-center gap-4">
+               {!sidebarOpen && (
+                  <button onClick={() => setSidebarOpen(true)} className="hidden lg:block text-slate-400 hover:text-white transition-colors"><ChevronRight size={24} /></button>
+               )}
+               <div className="flex gap-2 p-1 bg-slate-900/80 rounded-lg border border-slate-800/50">
+                  <button onClick={() => setActiveTab('compose')} className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all ${activeTab === 'compose' ? `${DEZINE_GRADIENT} text-white shadow-lg` : 'text-slate-400 hover:text-white'}`}>Studio</button>
+                  <button onClick={() => setActiveTab('results')} className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all ${activeTab === 'results' ? `${DEZINE_GRADIENT} text-white shadow-lg` : 'text-slate-400 hover:text-white'}`}>Gallery</button>
+               </div>
+            </div>
            <button onClick={() => setCanvasObjects([])} className="text-slate-500 hover:text-red-400 flex items-center gap-2 text-sm font-medium transition-colors"><Trash2 size={14}/> Clear Canvas</button>
         </div>
 
@@ -919,7 +938,7 @@ const DezineApp = () => {
 
         {/* AI BAR */}
         <div className="h-auto min-h-[6rem] border-t border-slate-800 p-6 flex justify-center shrink-0 bg-slate-950/90 backdrop-blur">
-           <div className="w-full flex flex-col md:flex-row gap-4 items-center">
+           <div className="w-full flex flex-col md:flex-row gap-4 items-center flex-wrap">
              <div className="flex-1 relative group">
                 <input 
                     type="text" 
@@ -930,7 +949,7 @@ const DezineApp = () => {
                 />
                 
                 {/* LLM Buttons */}
-                <div className="absolute right-2 top-2 flex gap-1 bg-slate-800/50 rounded-xl p-1 border border-slate-700/50">
+                <div className="flex md:absolute md:right-2 md:top-2 gap-1 bg-slate-800/50 rounded-xl p-1 border border-slate-700/50 mt-2 md:mt-0 justify-end">
                    {isTextLoading ? (
                        <Loader2 className="w-8 h-8 p-1.5 text-indigo-500 animate-spin" />
                    ) : (
@@ -943,8 +962,8 @@ const DezineApp = () => {
                 </div>
              </div>
              
-             <button onClick={() => generateAI('blend')} disabled={!baseImage || isProcessing} className={`${DEZINE_GRADIENT} text-white px-8 rounded-2xl font-bold flex items-center gap-2 shadow-lg shadow-green-900/20 hover:scale-105 transition-transform active:scale-95 disabled:opacity-50 disabled:grayscale`}><Layers size={20} /> Blend</button>
-             <button onClick={() => generateAI('edit')} disabled={!baseImage || isProcessing} className="bg-slate-800 border border-slate-700 hover:border-slate-500 text-slate-200 px-6 rounded-2xl font-medium flex items-center gap-2 hover:bg-slate-700 transition-colors disabled:opacity-50"><Palette size={20} /> Restyle</button>
+             <button onClick={() => generateAI('blend')} disabled={!baseImage || isProcessing} className={`${DEZINE_GRADIENT} text-white px-8 rounded-2xl font-bold flex items-center gap-2 shadow-lg shadow-green-900/20 hover:scale-105 transition-transform active:scale-95 disabled:opacity-50 disabled:grayscale shrink-0 whitespace-nowrap`}><Layers size={20} /> Blend</button>
+             <button onClick={() => generateAI('edit')} disabled={!baseImage || isProcessing} className="bg-slate-800 border border-slate-700 hover:border-slate-500 text-slate-200 px-6 rounded-2xl font-medium flex items-center gap-2 hover:bg-slate-700 transition-colors disabled:opacity-50 shrink-0 whitespace-nowrap"><Palette size={20} /> Restyle</button>
            </div>
         </div>
       </div>
