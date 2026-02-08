@@ -35,11 +35,11 @@ import {
   serverTimestamp 
 } from 'firebase/firestore';
 
-/* DEZINE APP v9.2 (Final Release)
+/* DEZINE APP v9.3 (Model Fix)
    -----------------------------------------------------------------------
    FULL FEATURE SET:
    - Cloud: Firebase Auth (Email/Pass) & Firestore (Data Persistence)
-   - AI: Gemini 2.5 Flash for "Magic Blend", Style Suggestion, & Critique
+   - AI: Gemini 1.5 Flash for "Magic Blend", Style Suggestion, & Critique
    - Mobile: PWA Installability & Responsive Layout
    - Canvas: Drag & Drop, Resize, Rotate, Layering
    -----------------------------------------------------------------------
