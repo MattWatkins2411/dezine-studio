@@ -143,7 +143,7 @@ const DezineApp = () => {
   const [tempName, setTempName] = useState("");
   const [activeTab, setActiveTab] = useState('compose'); 
   const [aiPrompt, setAiPrompt] = useState(""); 
-  const [apiKey, setApiKey] = useState(""); 
+  const [apiKey, setApiKey] = useState("AIzaSyBKoqCF-Ja6wmBdfRBBYlippvK_eJYvCjA"); 
 
   // Modals
   const [confirmModal, setConfirmModal] = useState({ isOpen: false, title: '', message: '', onConfirm: null });
