@@ -736,7 +736,7 @@ const DezineApp = () => {
 
   // MAIN APP
   return (
-    <div className="flex h-screen w-full bg-slate-900 text-slate-100 font-sans overflow-hidden">
+    <div className="flex h-dvh w-full bg-slate-900 text-slate-100 font-sans overflow-hidden">
       
       {/* MOBILE HEADER (Visible on small screens) */}
       <div className="lg:hidden absolute top-0 left-0 right-0 h-14 bg-slate-950/90 backdrop-blur z-40 border-b border-slate-800 flex items-center justify-between px-4">
@@ -872,7 +872,7 @@ const DezineApp = () => {
               <div 
                 ref={workspaceRef}
                 className="relative shadow-2xl inline-block transition-all duration-300 rounded-sm overflow-hidden ring-1 ring-slate-800"
-                style={{ minWidth: baseImage ? 'auto' : '600px', minHeight: baseImage ? 'auto' : '400px' }}
+                style={{ minWidth: baseImage ? 'auto' : 'min(100%, 600px)', minHeight: baseImage ? 'auto' : '400px' }}
                 onDragOver={(e) => e.preventDefault()}
                 onDrop={handleDropOnCanvas}
                 onClick={() => setSelectedObjectId(null)}
@@ -880,7 +880,7 @@ const DezineApp = () => {
                  {baseImage ? (
                     <img src={baseImage} style={{ display: 'block', maxWidth: '100%', maxHeight: 'calc(100vh - 200px)', pointerEvents: 'none' }} />
                  ) : (
-                    <div className="w-full h-full flex flex-col items-center justify-center text-slate-600 border-2 border-dashed border-slate-800 rounded-xl bg-slate-900/50 p-20">
+                    <div className="w-full h-full flex flex-col items-center justify-center text-slate-600 border-2 border-dashed border-slate-800 rounded-xl bg-slate-900/50 p-4 md:p-20">
                         <div className="w-20 h-20 bg-slate-800 rounded-full flex items-center justify-center mb-4 text-slate-500 shadow-inner">
                            <Upload className="w-8 h-8" />
                         </div>
@@ -919,7 +919,7 @@ const DezineApp = () => {
 
         {/* AI BAR */}
         <div className="h-auto min-h-[6rem] border-t border-slate-800 p-6 flex justify-center shrink-0 bg-slate-950/90 backdrop-blur">
-           <div className="max-w-4xl w-full flex gap-4">
+           <div className="max-w-4xl w-full flex flex-col md:flex-row gap-4">
              <div className="flex-1 relative group">
                 <input 
                     type="text" 
