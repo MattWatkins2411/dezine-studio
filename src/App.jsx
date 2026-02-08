@@ -969,8 +969,20 @@ const DezineApp = () => {
                 </div>
              </div>
              
-             <button onClick={() => generateAI('blend')} disabled={!baseImage || isProcessing} className={`${DEZINE_GRADIENT} text-white px-8 rounded-2xl font-bold flex items-center gap-2 shadow-lg shadow-green-900/20 hover:scale-105 transition-transform active:scale-95 disabled:opacity-50 disabled:grayscale shrink-0 whitespace-nowrap`}><Layers size={20} /> Blend</button>
-             <button onClick={() => generateAI('edit')} disabled={!baseImage || isProcessing} className="bg-slate-800 border border-slate-700 hover:border-slate-500 text-slate-200 px-6 rounded-2xl font-medium flex items-center gap-2 hover:bg-slate-700 transition-colors disabled:opacity-50 shrink-0 whitespace-nowrap"><Palette size={20} /> Restyle</button>
+             <button 
+                onClick={() => alert("Billing Required: Image generation features require a paid Google Cloud account.")} 
+                className="bg-slate-800/50 border border-slate-700/50 text-slate-500 px-8 rounded-2xl font-bold flex items-center gap-2 cursor-not-allowed shrink-0 whitespace-nowrap"
+                title="Google Cloud Billing Required"
+              >
+                <Layers size={20} /> Blend (Billing Req.)
+              </button>
+              <button 
+                onClick={() => alert("Billing Required: Image generation features require a paid Google Cloud account.")} 
+                className="bg-slate-800/50 border border-slate-700/50 text-slate-500 px-6 rounded-2xl font-medium flex items-center gap-2 cursor-not-allowed shrink-0 whitespace-nowrap"
+                title="Google Cloud Billing Required"
+              >
+                <Palette size={20} /> Restyle (Billing Req.)
+              </button>
            </div>
         </div>
       </div>
@@ -986,6 +998,23 @@ const DezineApp = () => {
                     <div><label className="text-xs text-slate-500 font-bold uppercase tracking-wider mb-2 block">Team ID (For Sharing)</label><input className={`w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-white outline-none ${DEZINE_BORDER_FOCUS}`} value={teamId} onChange={(e) => setTeamId(e.target.value)} /></div>
                     <button onClick={handleUpdateProfile} className={`w-full ${DEZINE_GRADIENT} text-white py-3 rounded-xl font-bold shadow-lg mt-2`}>Save Changes</button>
                     
+                    <button
+                  onClick={() => alert("Billing Required: Image generation is not available on the free tier.")}
+                  className="flex items-center gap-2 px-4 py-2 bg-slate-700/50 text-slate-400 cursor-not-allowed rounded-lg border border-slate-600/50"
+                  title="Requires Google Cloud Billing"
+                >
+                  <Wand2 size={18} />
+                  Magic Blend (Billing Req.)
+                </button>
+                <button
+                  onClick={() => alert("Billing Required: Image generation is not available on the free tier.")}
+                  className="flex items-center gap-2 px-4 py-2 bg-slate-700/50 text-slate-400 cursor-not-allowed rounded-lg border border-slate-600/50"
+                  title="Requires Google Cloud Billing"
+                >
+                  <Wand2 size={18} />
+                  Suggest Style (Billing Req.)
+                </button>
+            
                     {/* Log Out Button */}
                     <button 
                       onClick={handleLogout}
