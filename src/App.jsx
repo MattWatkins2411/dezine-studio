@@ -223,7 +223,8 @@ const DezineApp = () => {
   // --- Authentication Handlers ---
   const handleEmailAuth = async (e) => {
     e.preventDefault();
-    if(!email || !password) {
+    const cleanEmail = email.trim();
+    if(!cleanEmail || !password) {
         setAuthError("Please enter email and password.");
         return;
     }
@@ -232,18 +233,22 @@ const DezineApp = () => {
     
     try {
         if (isRegistering) {
-            await createUserWithEmailAndPassword(auth, email, password);
+            await createUserWithEmailAndPassword(auth, cleanEmail, password);
         } else {
-            await signInWithEmailAndPassword(auth, email, password);
+            await signInWithEmailAndPassword(auth, cleanEmail, password);
         }
     } catch (err) {
         console.error(err);
         let msg = "Authentication failed.";
         if (err.code === 'auth/invalid-email') msg = "Invalid email address.";
-        if (err.code === 'auth/user-not-found') msg = "No account found.";
-        if (err.code === 'auth/wrong-password') msg = "Incorrect password.";
-        if (err.code === 'auth/email-already-in-use') msg = "Email already in use.";
-        if (err.code === 'auth/weak-password') msg = "Password should be at least 6 characters.";
+        else if (err.code === 'auth/user-not-found') msg = "No account found.";
+        else if (err.code === 'auth/wrong-password') msg = "Incorrect password.";
+        else if (err.code === 'auth/email-already-in-use') msg = "Email already in use.";
+        else if (err.code === 'auth/weak-password') msg = "Password should be at least 6 characters.";
+        else if (err.code === 'auth/network-request-failed') msg = "Network error. Check connection.";
+        else if (err.code === 'auth/too-many-requests') msg = "Too many attempts. Try later.";
+        else msg = `Auth Failed: ${err.code}`; // Fallback to show code
+        
         setAuthError(msg);
         setAuthLoading(false);
     }
