@@ -287,6 +287,8 @@ const DezineApp = () => {
         if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
              await signInWithCustomToken(auth, __initial_auth_token);
         }
+        const savedKey = localStorage.getItem('dezine_api_key');
+        if (savedKey) setApiKey(savedKey);
     };
     init();
 
@@ -872,7 +874,7 @@ const DezineApp = () => {
 
         {/* API Key */}
         <div className="p-4 border-t border-slate-800 bg-slate-950 shrink-0">
-           <input type="password" placeholder="Gemini API Key" className={`w-full bg-slate-900 border border-slate-800 rounded px-3 py-2 text-xs text-slate-300 focus:outline-none ${DEZINE_BORDER_FOCUS}`} value={apiKey} onChange={(e) => setApiKey(e.target.value)} />
+           <input type="password" placeholder="Gemini API Key" className={`w-full bg-slate-900 border border-slate-800 rounded px-3 py-2 text-xs text-slate-300 focus:outline-none ${DEZINE_BORDER_FOCUS}`} value={apiKey} onChange={(e) => { setApiKey(e.target.value); localStorage.setItem('dezine_api_key', e.target.value); }} />
         </div>
       </div>
 
