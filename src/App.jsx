@@ -892,7 +892,7 @@ const DezineApp = () => {
                  ))}
               </div>
             ) : (
-               <div className="w-full h-full max-w-6xl grid grid-cols-3 gap-6 overflow-y-auto px-4 content-start">
+               <div className="w-full h-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 overflow-y-auto px-4 content-start">
                   {generatedImages.map((imgObj) => (
                     <div key={imgObj.id} className="bg-slate-900 rounded-xl overflow-hidden group relative shadow-xl cursor-pointer border border-slate-800 hover:border-green-500/50 transition-all hover:-translate-y-1" onClick={() => { setPreviewImage(imgObj); setTempName(imgObj.name); }}>
                        <img src={imgObj.src} className="w-full h-48 object-cover" />
@@ -919,7 +919,7 @@ const DezineApp = () => {
 
         {/* AI BAR */}
         <div className="h-auto min-h-[6rem] border-t border-slate-800 p-6 flex justify-center shrink-0 bg-slate-950/90 backdrop-blur">
-           <div className="max-w-4xl w-full flex flex-col md:flex-row gap-4">
+           <div className="w-full flex flex-col md:flex-row gap-4 items-center">
              <div className="flex-1 relative group">
                 <input 
                     type="text" 
@@ -1025,7 +1025,7 @@ const DezineApp = () => {
                 )}
             </div>
 
-            <div className="h-24 border-t border-white/10 flex items-center justify-center gap-4 shrink-0 bg-slate-950">
+            <div className="min-h-24 py-4 border-t border-white/10 flex flex-wrap items-center justify-center gap-4 shrink-0 bg-slate-950 px-4">
                <a href={previewImage.src} download="render.png" className="bg-slate-800 hover:bg-slate-700 text-white px-6 py-3 rounded-xl flex items-center gap-2 font-medium transition-colors"><Download size={20} /> Download PNG</a>
                <button onClick={(e) => handlePDFDownload(e, previewImage)} className="bg-slate-800 hover:bg-slate-700 text-white px-6 py-3 rounded-xl flex items-center gap-2 font-medium transition-colors"><FileText size={20} /> Export PDF</button>
                <button onClick={handleUseAsBase} className={`${DEZINE_GRADIENT} text-white px-8 py-3 rounded-xl font-bold flex items-center gap-2 shadow-lg hover:scale-105 transition-transform`}><Layers size={20} /> Use as Base</button>
