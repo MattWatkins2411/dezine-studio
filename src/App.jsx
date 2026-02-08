@@ -39,7 +39,7 @@ import {
    -----------------------------------------------------------------------
    FULL FEATURE SET:
    - Cloud: Firebase Auth (Email/Pass) & Firestore (Data Persistence)
-   - AI: Gemini 1.5 Flash for "Magic Blend", Style Suggestion, & Critique
+   - AI: Gemini 2.0 Flash (Text) & 2.5 Flash Image (Visuals)
    - Mobile: PWA Installability & Responsive Layout
    - Canvas: Drag & Drop, Resize, Rotate, Layering
    -----------------------------------------------------------------------
@@ -625,7 +625,7 @@ const DezineApp = () => {
         ? "Forensic Photo Compositor. Rules: 1. Immutable Background. 2. Immutable Assets. 3. Shadows only. User: " + aiPrompt
         : "Interior Editor. Modify style based on: " + aiPrompt;
       
-      const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp-image-generation:generateContent?key=${apiKey}`, {
+      const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent?key=${apiKey}`, {
           method: 'POST', headers: {'Content-Type': 'application/json'},
           body: JSON.stringify({
               contents: [{ parts: [{ text: sys }, { inlineData: { mimeType: "image/png", data: base64 } }] }],
