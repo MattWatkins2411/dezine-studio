@@ -9,7 +9,9 @@ import {
   Download, 
   Trash2, 
   ChevronLeft, 
-  ChevronRight
+  ChevronRight,
+  PanelLeftClose,
+  PanelLeftOpen
 } from 'lucide-react';
 import { initializeApp } from 'firebase/app';
 import { 
@@ -69,7 +71,7 @@ const db = getFirestore(app);
 const appId = typeof __app_id !== 'undefined' ? __app_id : 'dezine-production-v1';
 
 // --- Assets & Branding ---
-const LOGO_URL = "Gemini_Generated_Image_iw8hbyiw8hbyiw8h.jpg"; 
+const MAIN_LOGO = "/pwa-512x512.png"; // Using the public path to the logo
 const DEZINE_GRADIENT = "bg-gradient-to-r from-cyan-500 via-green-500 to-purple-600";
 const DEZINE_TEXT_GRADIENT = "bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-green-400 to-purple-500";
 const DEZINE_BORDER_FOCUS = "focus:border-green-400 focus:ring-1 focus:ring-green-400";
@@ -726,8 +728,7 @@ const DezineApp = () => {
              <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-indigo-900/20 via-slate-950 to-slate-950"></div>
              <div className="text-center space-y-8 z-10 p-8 max-w-sm w-full bg-slate-900/50 backdrop-blur-xl border border-slate-800 rounded-3xl shadow-2xl">
                 <div className="flex flex-col items-center justify-center gap-4">
-                   {!logoError ? <img src={LOGO_URL} alt="Dezine" className="h-20 w-auto object-contain rounded-2xl shadow-lg shadow-cyan-500/20" onError={() => setLogoError(true)} /> : <div className="w-16 h-16 bg-gradient-to-br from-cyan-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg mb-2"><LayoutTemplate className="text-white w-8 h-8" /></div>}
-                   <h1 className={`text-4xl font-black tracking-tighter ${DEZINE_TEXT_GRADIENT}`}>Dezine</h1>
+                   <img src={MAIN_LOGO} alt="Dezine" className="h-24 w-auto object-contain drop-shadow-2xl hover:scale-105 transition-transform" />
                 </div>
                 <form onSubmit={handleEmailAuth} className="space-y-4 w-full">
                     {authError && <div className="text-red-400 text-xs bg-red-900/20 p-2 rounded border border-red-900/50">{authError}</div>}
@@ -774,16 +775,11 @@ const DezineApp = () => {
 
       {/* SIDEBAR */}
       <div className={`fixed inset-y-0 left-0 w-80 bg-slate-950 border-r border-slate-800 flex flex-col z-50 shadow-xl transition-transform duration-300 transform ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0 lg:hidden'}`}>
-        <div className="p-5 border-b border-slate-800 bg-slate-950 flex flex-col items-center gap-3 shrink-0 relative">
-          <button onClick={() => setSidebarOpen(false)} className="lg:hidden absolute top-4 right-4 text-slate-500 hover:text-white"><X /></button>
-          {!logoError ? <img src={LOGO_URL} alt="Dezine" className="h-16 w-auto object-contain rounded-lg shadow-lg shadow-purple-900/20" onError={() => setLogoError(true)} /> : <h1 className={`text-3xl font-bold tracking-tight ${DEZINE_TEXT_GRADIENT}`}>Dezine</h1>}
-          
-          <div className="w-full flex justify-between items-center mt-2 px-1">
-             <p className="text-[10px] text-slate-500 font-medium uppercase tracking-widest">{dataMode === 'team' ? `TEAM: ${teamId}` : 'PERSONAL'}</p>
-             <div className="flex gap-1">
-                <button onClick={() => setProfileModalOpen(true)} className="p-1.5 hover:bg-slate-800 rounded-full text-slate-400 hover:text-white transition-colors"><User size={14} /></button>
-                <button onClick={() => setSidebarOpen(false)} className="hidden lg:block p-1.5 hover:bg-slate-800 rounded-full text-slate-400 hover:text-white transition-colors"><ChevronLeft size={14} /></button>
-             </div>
+        <div className="h-16 flex items-center gap-3 px-6 border-b border-slate-800 bg-slate-950 shrink-0">
+             <img src={MAIN_LOGO} className="h-8 w-auto object-contain" alt="Dezine" />
+             <div className="flex-1"></div>
+             <button onClick={() => setSidebarOpen(false)} className="lg:hidden text-slate-500 hover:text-white"><X size={20}/></button>
+             <button onClick={() => setSidebarOpen(false)} className="hidden lg:block text-slate-500 hover:text-white"><PanelLeftClose size={20}/></button>
           </div>
           {/* Desktop Install Prompt */}
           <div className="hidden lg:block w-full">
@@ -793,8 +789,7 @@ const DezineApp = () => {
               </button>
             )}
           </div>
-        </div>
-
+        
         <div className="p-4 flex-1 overflow-y-auto custom-scrollbar flex flex-col gap-6">
           {/* Base Image */}
           <div className="shrink-0">
