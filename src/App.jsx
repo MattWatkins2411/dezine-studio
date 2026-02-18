@@ -11,7 +11,8 @@ import {
   Trash2, 
   PanelLeftClose,
   PanelLeftOpen,
-  ChevronRight
+  ChevronRight,
+  ChevronLeft
 } from 'lucide-react';
 import { initializeApp } from 'firebase/app';
 import { 
