@@ -11,7 +11,6 @@ import {
   PanelLeftClose,
   PanelLeftOpen
 } from 'lucide-react';
-import removeBackground from '@imgly/background-removal';
 import { initializeApp } from 'firebase/app';
 import { 
   getAuth, 
@@ -411,32 +410,14 @@ const DezineApp = () => {
     }
   };
 
-  const processNewAssetFile = async (file) => {
-    // Show some loading state or notification if possible, for now we just process
-    const targetCategory = activeCategory !== 'All' ? activeCategory : 'Branding';
-    
-    try {
-        // Attempt background removal
-        const config = {
-          publicPath: '/assets/' // Path to WASM/ONNX files
-        };
-        const blob = await removeBackground(file, config);
-        const reader = new FileReader();
-        reader.onload = (event) => {
-            const newAsset = { src: event.target.result, name: file.name.split('.')[0], category: targetCategory };
-            saveAssetToCloud(newAsset);
-        };
-        reader.readAsDataURL(blob);
-    } catch (error) {
-        console.error("Background removal failed, falling back to original", error);
-        // Fallback to original file if removal fails
-        const reader = new FileReader();
-        reader.onload = (event) => {
-          const newAsset = { src: event.target.result, name: file.name.split('.')[0], category: targetCategory };
-          saveAssetToCloud(newAsset);
-        };
-        reader.readAsDataURL(file);
-    }
+  const processNewAssetFile = (file) => {
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const targetCategory = activeCategory !== 'All' ? activeCategory : 'Branding';
+      const newAsset = { src: event.target.result, name: file.name.split('.')[0], category: targetCategory };
+      saveAssetToCloud(newAsset);
+    };
+    reader.readAsDataURL(file);
   };
 
   const handleBaseImageUpload = (e) => {
@@ -681,18 +662,23 @@ const DezineApp = () => {
     const DraggableObject = ({ obj, isSelected, onSelect, onUpdate }) => {
     // Standard Drag Implementation
     const handlePointerDown = (e) => {
+      e.preventDefault(); // Prevent default touch actions like specific emulation
       e.stopPropagation();
       onSelect(obj.id);
-      e.target.setPointerCapture(e.pointerId); // Capture pointer for smooth dragging
+      try {
+        e.target.setPointerCapture(e.pointerId);
+      } catch (err) { console.warn("Pointer capture failed", err); }
       
       const startX = e.clientX; const startY = e.clientY; const startObjX = obj.x; const startObjY = obj.y;
       
       const handlePointerMove = (moveEvent) => {
+        moveEvent.preventDefault();
         onUpdate(obj.id, { x: startObjX + moveEvent.clientX - startX, y: startObjY + moveEvent.clientY - startY });
       };
       
       const handlePointerUp = (upEvent) => {
-        e.target.releasePointerCapture(upEvent.pointerId);
+        upEvent.preventDefault();
+        try { e.target.releasePointerCapture(upEvent.pointerId); } catch(e){}
         document.removeEventListener('pointermove', handlePointerMove); 
         document.removeEventListener('pointerup', handlePointerUp);
       };
@@ -702,18 +688,21 @@ const DezineApp = () => {
     };
 
     const handleRotateStart = (e) => {
+      e.preventDefault();
       e.stopPropagation();
-      e.target.setPointerCapture(e.pointerId);
+      try { e.target.setPointerCapture(e.pointerId); } catch(e){}
       const box = e.target.parentElement.getBoundingClientRect();
       const centerX = box.left + box.width / 2;
       const centerY = box.top + box.height / 2;
       
       const handleRotateMove = (moveEvent) => {
+        moveEvent.preventDefault();
         onUpdate(obj.id, { rotation: Math.atan2(moveEvent.clientY - centerY, moveEvent.clientX - centerX) * (180 / Math.PI) + 90 });
       };
       
       const handleRotateUp = (upEvent) => { 
-        e.target.releasePointerCapture(upEvent.pointerId);
+        upEvent.preventDefault();
+        try { e.target.releasePointerCapture(upEvent.pointerId); } catch(e){}
         document.removeEventListener('pointermove', handleRotateMove); 
         document.removeEventListener('pointerup', handleRotateUp); 
       };
@@ -728,7 +717,7 @@ const DezineApp = () => {
         style={{
           position: 'absolute', left: obj.x, top: obj.y, width: obj.width, height: obj.height,
           transform: `rotate(${obj.rotation}deg)`, zIndex: isSelected ? 10 : 1,
-          touchAction: 'none' // Prevent scrolling while dragging
+          touchAction: 'none' 
         }}
         className="group"
       >
@@ -741,16 +730,31 @@ const DezineApp = () => {
           <>
             <div 
                className="absolute -bottom-1.5 -right-1.5 w-4 h-4 bg-white border border-green-400 rounded-full cursor-se-resize z-50 shadow-sm"
+               style={{ touchAction: 'none' }}
                onPointerDown={(e) => {
+                 e.preventDefault();
                  e.stopPropagation(); 
-                 e.target.setPointerCapture(e.pointerId);
+                 try { e.target.setPointerCapture(e.pointerId); } catch(e){}
                  const startX = e.clientX; const startW = obj.width;
-                 const handleMove = (ev) => onUpdate(obj.id, { width: Math.max(20, startW + (ev.clientX - startX)), height: Math.max(20, startW + (ev.clientX - startX)) });
-                 const handleUp = (ev) => { e.target.releasePointerCapture(ev.pointerId); document.removeEventListener('pointermove', handleMove); document.removeEventListener('pointerup', handleUp); };
+                 const handleMove = (ev) => {
+                     ev.preventDefault();
+                     onUpdate(obj.id, { width: Math.max(20, startW + (ev.clientX - startX)), height: Math.max(20, startW + (ev.clientX - startX)) });
+                 };
+                 const handleUp = (ev) => { 
+                     ev.preventDefault();
+                     try { e.target.releasePointerCapture(ev.pointerId); } catch(e){} 
+                     document.removeEventListener('pointermove', handleMove); document.removeEventListener('pointerup', handleUp); 
+                 };
                  document.addEventListener('pointermove', handleMove); document.addEventListener('pointerup', handleUp);
                }}
             />
-             <div className="absolute -top-8 left-1/2 -translate-x-1/2 w-6 h-6 flex items-center justify-center bg-white border border-green-400 rounded-full cursor-crosshair z-50 shadow-sm hover:bg-blue-50" onPointerDown={handleRotateStart}><RotateCw size={12} className="text-green-600" /></div>
+             <div 
+                className="absolute -top-8 left-1/2 -translate-x-1/2 w-6 h-6 flex items-center justify-center bg-white border border-green-400 rounded-full cursor-crosshair z-50 shadow-sm hover:bg-blue-50"
+                style={{ touchAction: 'none' }} 
+                onPointerDown={handleRotateStart}
+             >
+                <RotateCw size={12} className="text-green-600" />
+             </div>
              <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-px h-2 bg-green-400"></div>
              <div className="absolute -top-10 -right-12 flex flex-col gap-1 bg-white/90 backdrop-blur rounded-lg p-1 shadow-lg border border-slate-200 z-50 pointer-events-auto">
                  <button onPointerDown={(e) => e.stopPropagation()} onClick={(e) => { e.preventDefault(); e.stopPropagation(); onUpdate(obj.id, { flipX: !obj.flipX }); }} className="p-1.5 hover:bg-slate-100 rounded text-slate-700"><FlipHorizontal size={14} /></button>
