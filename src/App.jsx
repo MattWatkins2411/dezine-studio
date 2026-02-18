@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+// Force redeploy - remove bad import
 import { 
   Upload, Layers, Wand2, Move, Image as ImageIcon, Plus, 
   MousePointer2, LayoutTemplate, Maximize2, Undo2, Loader2, X, Save, Palette, 
