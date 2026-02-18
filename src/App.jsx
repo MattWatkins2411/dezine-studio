@@ -414,13 +414,16 @@ const DezineApp = () => {
   };
 
   const processNewAssetFile = (file) => {
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      const targetCategory = activeCategory !== 'All' ? activeCategory : 'Branding';
-      const newAsset = { src: event.target.result, name: file.name.split('.')[0], category: targetCategory };
-      saveAssetToCloud(newAsset);
-    };
-    reader.readAsDataURL(file);
+    return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          const targetCategory = activeCategory !== 'All' ? activeCategory : 'Branding';
+          const newAsset = { src: event.target.result, name: file.name.split('.')[0], category: targetCategory };
+          saveAssetToCloud(newAsset);
+          resolve();
+        };
+        reader.readAsDataURL(file);
+    });
   };
 
   const handleBaseImageUpload = (e) => {
@@ -433,8 +436,10 @@ const DezineApp = () => {
   };
 
   const handleAssetUpload = (e) => {
-    const file = e.target.files[0];
-    if (file) processNewAssetFile(file);
+    const files = Array.from(e.target.files);
+    if (files.length > 0) {
+        Promise.all(files.map(file => processNewAssetFile(file)));
+    }
   };
 
   // --- Templates ---
@@ -532,7 +537,8 @@ const DezineApp = () => {
   const handleDropOnCanvas = (e) => {
     e.preventDefault();
     if (e.dataTransfer.files.length > 0) {
-        processNewAssetFile(e.dataTransfer.files[0]);
+        const files = Array.from(e.dataTransfer.files);
+        Promise.all(files.map(file => processNewAssetFile(file)));
         return;
     }
     const assetId = e.dataTransfer.getData('assetId');
@@ -864,7 +870,7 @@ const DezineApp = () => {
               <h2 className="text-xs font-bold text-slate-400 uppercase tracking-wider">Assets ({dataMode})</h2>
               <button onClick={() => assetInputRef.current.click()} className={`text-xs ${DEZINE_GRADIENT} px-3 py-1.5 rounded-lg text-white flex items-center gap-1 shadow-md hover:shadow-lg hover:brightness-110 transition-all font-bold`}><Plus size={12} /> Upload</button>
             </div>
-            <input type="file" ref={assetInputRef} className="hidden" accept="image/*" onChange={handleAssetUpload} />
+            <input type="file" ref={assetInputRef} className="hidden" accept="image/*" multiple onChange={handleAssetUpload} />
             
             <div className="mb-4 space-y-2">
                 <div className="flex flex-wrap gap-1.5">
