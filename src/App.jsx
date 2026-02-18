@@ -1021,18 +1021,20 @@ const DezineApp = () => {
              </div>
              
              <button 
-                onClick={() => alert("Billing Required: Image generation features require a paid Google Cloud account.")} 
-                className="bg-slate-800/50 border border-slate-700/50 text-slate-500 px-8 rounded-2xl font-bold flex items-center gap-2 cursor-not-allowed shrink-0 whitespace-nowrap"
-                title="Google Cloud Billing Required"
+                onClick={() => generateAI('blend')} 
+                className={`bg-slate-800/50 border border-slate-700/50 text-slate-300 hover:text-white hover:bg-slate-700 px-8 rounded-2xl font-bold flex items-center gap-2 shrink-0 whitespace-nowrap transition-all ${isProcessing ? 'opacity-50 cursor-wait' : ''}`}
+                disabled={isProcessing}
+                title="Blend Assets into Scene"
               >
-                <Layers size={20} /> Blend (Billing Req.)
+                {isProcessing ? <Loader2 size={20} className="animate-spin"/> : <Layers size={20} />} Blend
               </button>
               <button 
-                onClick={() => alert("Billing Required: Image generation features require a paid Google Cloud account.")} 
-                className="bg-slate-800/50 border border-slate-700/50 text-slate-500 px-6 rounded-2xl font-medium flex items-center gap-2 cursor-not-allowed shrink-0 whitespace-nowrap"
-                title="Google Cloud Billing Required"
+                onClick={() => generateAI('restyle')} 
+                className={`bg-slate-800/50 border border-slate-700/50 text-slate-300 hover:text-white hover:bg-slate-700 px-6 rounded-2xl font-medium flex items-center gap-2 shrink-0 whitespace-nowrap transition-all ${isProcessing ? 'opacity-50 cursor-wait' : ''}`}
+                disabled={isProcessing}
+                title="Restyle Image"
               >
-                <Palette size={20} /> Restyle (Billing Req.)
+                {isProcessing ? <Loader2 size={20} className="animate-spin"/> : <Palette size={20} />} Restyle
               </button>
            </div>
         </div>
@@ -1050,20 +1052,20 @@ const DezineApp = () => {
                     <button onClick={handleUpdateProfile} className={`w-full ${DEZINE_GRADIENT} text-white py-3 rounded-xl font-bold shadow-lg mt-2`}>Save Changes</button>
                     
                     <button
-                  onClick={() => alert("Billing Required: Image generation is not available on the free tier.")}
-                  className="flex items-center gap-2 px-4 py-2 bg-slate-700/50 text-slate-400 cursor-not-allowed rounded-lg border border-slate-600/50"
-                  title="Requires Google Cloud Billing"
+                  onClick={() => generateAI('blend')}
+                  className="flex items-center gap-2 px-4 py-2 bg-slate-700/50 hover:bg-slate-600 text-slate-200 rounded-lg border border-slate-600/50 transition-colors"
+                  title="Deep Blend"
                 >
                   <Wand2 size={18} />
-                  Magic Blend (Billing Req.)
+                  Magic Blend
                 </button>
                 <button
-                  onClick={() => alert("Billing Required: Image generation is not available on the free tier.")}
-                  className="flex items-center gap-2 px-4 py-2 bg-slate-700/50 text-slate-400 cursor-not-allowed rounded-lg border border-slate-600/50"
-                  title="Requires Google Cloud Billing"
+                  onClick={handleSuggestStyle}
+                  className="flex items-center gap-2 px-4 py-2 bg-slate-700/50 hover:bg-slate-600 text-slate-200 rounded-lg border border-slate-600/50 transition-colors"
+                  title="Get Style Suggestions"
                 >
-                  <Wand2 size={18} />
-                  Suggest Style (Billing Req.)
+                  <Lightbulb size={18} />
+                  Suggest Style
                 </button>
             
                     {/* Log Out Button */}
