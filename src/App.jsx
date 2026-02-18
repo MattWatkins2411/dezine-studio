@@ -10,7 +10,8 @@ import {
   Download, 
   Trash2, 
   PanelLeftClose,
-  PanelLeftOpen
+  PanelLeftOpen,
+  ChevronRight
 } from 'lucide-react';
 import { initializeApp } from 'firebase/app';
 import { 
